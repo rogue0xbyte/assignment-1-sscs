@@ -1,4 +1,4 @@
-import argparse, json, requests, base64
+import argparse, json, requests, base64, sys
 from util import extract_public_key, verify_artifact_signature
 from merkle_proof import DefaultHasher, verify_consistency, verify_inclusion, compute_leaf_hash
 
@@ -9,7 +9,7 @@ def get_log_entry(log_index, debug=False):
     params = {"logIndex": log_index}
     
     try:
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, timeout=(5, 15))
         response.raise_for_status()
         data = response.json()
         
@@ -29,6 +29,10 @@ def get_verification_proof(log_index, debug=False):
     pass
 
 def extract_signature_and_cert(log_entry):
+
+    if not log_entry or not isinstance(log_entry, dict):
+        logger.warning("empty or invalid log_entry received")
+        sys.exit(1)
 
     entry_uuid = list(log_entry.keys())[0]
     entry = log_entry[entry_uuid]
@@ -85,6 +89,11 @@ def get_latest_checkpoint(debug=False):
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
+
+        if len(data)<1:
+            print(f"latest checkpoint response nil")
+            sys.exit(1)
+
         
         if debug:
             print(f"current checkpoint:")
@@ -127,6 +136,7 @@ def consistency(prev_checkpoint, debug=False):
 
 def main():
     debug = False
+    REKOR_BASE_URL = os.environ.get('REKOR_BASE_URL', "https://rekor.sigstore.dev/api/v1")
     parser = argparse.ArgumentParser(description="Rekor Verifier")
     parser.add_argument('-d', '--debug', help='Debug mode',
                         required=False, action='store_true') # Default false
@@ -180,5 +190,4 @@ def main():
         consistency(prev_checkpoint, debug)
 
 if __name__ == "__main__":
-    REKOR_BASE_URL = "https://rekor.sigstore.dev/api/v1"
     main()
