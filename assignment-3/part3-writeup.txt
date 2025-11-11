@@ -1,0 +1,66 @@
+SCRUBBING
+---------
+
+[samsepiol@Zephyr assignment-1]$ git log --all personal.txt
+commit 5f1a216d4d85d619d0d4ba8b9db94d40762d0d39 (HEAD -> main, origin/main, origin/HEAD)
+Author: rogue0xbyte <aaditya.r@nyu.edu>
+Date:   Tue Nov 11 11:53:53 2025 -0500
+
+    trufflehog done
+[samsepiol@Zephyr assignment-1]$ python3 git-filter-repo  --invert-paths --path personal.txt --force
+NOTICE: Removing 'origin' remote; see 'Why is my origin removed?'
+        in the manual if you want to push back there.
+        (was https://github.com/rogue0xbyte/assignment-1-sscs.git)
+Parsed 14 commits
+New history written in 5.30 seconds; now repacking/cleaning...
+Repacking your repo and cleaning out old unneeded objects
+Updating files: 100% (26/26), done.
+HEAD is now at 6d86fd6 trufflehog done
+Enumerating objects: 67, done.
+Counting objects: 100% (67/67), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (64/64), done.
+Writing objects: 100% (67/67), done.
+Total 67 (delta 25), reused 1 (delta 0), pack-reused 0 (from 0)
+Removing duplicate objects: 100% (256/256), done.
+Completely finished after 19.29 seconds.
+[samsepiol@Zephyr assignment-1]$ git log --all personal.txt
+fatal: ambiguous argument 'personal.txt': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+
+
+FORCE MERGING
+-------------
+- update branch protection to allow force push
+
+git push origin main --force
+Enumerating objects: 72, done.
+Counting objects: 100% (72/72), done.
+Delta compression using up to 20 threads
+Compressing objects: 100% (43/43), done.
+Writing objects: 100% (72/72), 837.72 KiB | 6.21 MiB/s, done.
+Total 72 (delta 26), reused 66 (delta 25), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (26/26), done.
+remote: Bypassed rule violations for refs/heads/main:
+remote:
+remote: - Commits must have verified signatures.
+remote:   Found 14 violations (showing first 10):
+remote:
+remote:   6d86fd6aa3dd82c1e3928df8ee7e126f4904ba17
+remote:   fbc99b31cb00219eab9088efedb9fea54197fb48
+remote:   38a027a7390a51a804ebe176559c9f817c8ee222
+remote:   2b6ab39ec31a237d1ea628e323fe406a38c3361b
+remote:   ba7b545c1cc135815dcf0bddd33b7f859baf8df0
+remote:   c9a83515a885b3d320768a253c4af01657a54abc
+remote:   8f8b77b40cae5a5d995576a0c5393d86ae7571d0
+remote:   b13bb2543c64c07743d88e28f65d41636fea960d
+remote:   f6f3a2e6aae47ca432a59f159602446f84d0dc3c
+remote:   a86aa4cedbfbc0e2fabf8ed2b93c3407a22c62a2
+remote:
+remote: - Changes must be made through a pull request.
+remote:
+remote: - Cannot force-push to this branch
+remote:
+To github.com:rogue0xbyte/assignment-1-sscs.git
+ + 5f1a216...77cb2fe main -> main (forced update)
