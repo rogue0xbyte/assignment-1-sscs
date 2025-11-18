@@ -1,0 +1,2 @@
+cosign attest-blob --key ../cosign-keys/cosign.key --type cyclonedx --predicate cyclonedx-sbom.json bundle dist/sscs_assignment-0.1.0
+cosign verify-blob-attestation --key ../cosign-keys/cosign.pub --type cyclonedx --bundle sscs_assignment.attestation.bundle dist/sscs_assignment-0.1.0-py3-none-any.whl

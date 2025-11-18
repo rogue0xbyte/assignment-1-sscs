@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: trufflehog
+        name: TruffleHog
+        description: Detect secrets in repo
+        entry: bash -c 'trufflehog git file://$PWD --since-commit HEAD~1 --no-verification --fail'
+        language: system
+        stages: ["commit", "push"]
