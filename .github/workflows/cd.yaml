@@ -29,7 +29,7 @@ jobs:
           poetry build
 
       - name: Upload built wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-wheel
           path: dist/*.whl
@@ -39,7 +39,7 @@ jobs:
           pip install cyclonedx-bom
           cyclonedx-py -o cyclonedx-sbom.json -f json
       - name: Upload SBOM
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sbom
           path: cyclonedx-sbom.json
@@ -66,7 +66,7 @@ jobs:
             cyclonedx-sbom.json
 
       - name: Upload SBOM attestation bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sbom-attestation
           path: dist/sbom-attestation.bundle
