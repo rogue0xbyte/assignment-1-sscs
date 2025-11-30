@@ -38,7 +38,7 @@ jobs:
       # -------------------------
       - name: Run black (check only)
         run: |
-          black .
+          black . -l 78
 
       - name: Run ruff format check
         run: |
