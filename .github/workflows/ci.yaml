@@ -67,7 +67,7 @@ jobs:
       # -------------------------
       - name: Run TruffleHog
         run: |
-          trufflehog filesystem --path .
+          trufflehog filesystem --repo-path .
 
       # -------------------------
       # Testing & Coverage
