@@ -37,7 +37,7 @@ jobs:
       - name: Generate SBOM
         run: |
           timeout 100 pip install cyclonedx-bom || true
-          cyclonedx-py -o cyclonedx-sbom.json requirements
+          cyclonedx-py requirements requirements.txt > cyclonedx-sbom.json
       - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
