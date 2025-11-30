@@ -22,7 +22,7 @@ try:
         verify_inclusion,
         compute_leaf_hash,
     )
-except:
+except ModuleNotFoundError:
     from sscs_assignment.util import extract_public_key, verify_artifact_signature
     from sscs_assignment.merkle_proof import (
         DEFAULT_HASHER,
