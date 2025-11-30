@@ -1,0 +1,72 @@
+name: CD Pipeline
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-and-attest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+
+      - name: Build wheel
+        run: |
+          poetry build
+
+      - name: Upload built wheel
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-wheel
+          path: dist/*.whl
+
+      - name: Generate SBOM
+        run: |
+          pip install cyclonedx-bom
+          cyclonedx-py -o cyclonedx-sbom.json -f json
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v3
+        with:
+          name: sbom
+          path: cyclonedx-sbom.json
+
+      - name: Install cosign
+        run: |
+          COSIGN_VERSION=$(curl -s https://api.github.com/repos/sigstore/cosign/releases/latest | grep tag_name | cut -d '"' -f 4)
+          curl -Lo cosign https://github.com/sigstore/cosign/releases/download/$COSIGN_VERSION/cosign-linux-amd64
+          chmod +x cosign
+          sudo mv cosign /usr/local/bin/
+
+      - name: Restore cosign key
+        run: |
+          echo "${{ secrets.COSIGN_KEY }}" | base64 -d > cosign.key
+
+      - name: Generate SBOM attestation
+        run: |
+          cosign attest-blob \
+            --key cosign.key \
+            --type cyclonedx \
+            --output-attestation dist/sbom-attestation.json \
+            --bundle dist/sbom-attestation.bundle \
+            dist/*.whl \
+            cyclonedx-sbom.json
+
+      - name: Upload SBOM attestation bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: sbom-attestation
+          path: dist/sbom-attestation.bundle
