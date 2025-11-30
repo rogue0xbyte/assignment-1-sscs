@@ -60,6 +60,8 @@ jobs:
           cosign attest-blob \
             --key cosign.key \
             --type cyclonedx \
+            --output-attestation dist/sbom-attestation.json \
+            --bundle dist/sbom-attestation.bundle \
             --predicate cyclonedx-sbom.json \
             dist/*.whl > sbom-attestation.json
 
