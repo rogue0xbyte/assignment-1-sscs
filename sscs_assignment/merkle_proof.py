@@ -20,7 +20,8 @@ class Hasher:
         Initialize the hasher with a given hash function.
 
         Args:
-            hash_func (callable): Hash function to use (default: hashlib.sha256).
+            hash_func (callable): Hash function to use
+                                  (default: hashlib.sha256).
         """
         self.hash_func = hash_func
 
@@ -221,12 +222,14 @@ def root_from_inclusion_proof(hasher, index, size, leaf_hash, proof):
 
     if len(leaf_hash) != hasher.size():
         raise ValueError(
-            f"leaf_hash has unexpected size {len(leaf_hash)}, want {hasher.size()}"
+            f"leaf_hash has unexpected size {len(leaf_hash)}, want {hasher.size()}"  # noqa: E501
         )
 
     inner, border = decomp_incl_proof(index, size)
     if len(proof) != inner + border:
-        raise ValueError(f"wrong proof size {len(proof)}, want {inner + border}")
+        raise ValueError(
+            f"wrong proof size {len(proof)}, want {inner + border}"
+        )
 
     res = chain_inner(hasher, leaf_hash, proof[:inner], index)
     res = chain_border_right(hasher, res, proof[inner:])

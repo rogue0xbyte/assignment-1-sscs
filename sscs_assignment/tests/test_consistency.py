@@ -47,7 +47,11 @@ def test_consistency_verification_message():
 
     # Should show verification message
     output = result.stdout.lower()
-    assert "consistency" in output or "verification" in output or "successful" in output
+    assert (
+        "consistency" in output
+        or "verification" in output
+        or "successful" in output
+    )
 
 
 def test_consistency_requires_root_hash():

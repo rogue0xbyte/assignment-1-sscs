@@ -14,15 +14,26 @@ import json
 import argparse
 import requests
 
-from util import extract_public_key, verify_artifact_signature
-from merkle_proof import (
-    DEFAULT_HASHER,
-    verify_consistency,
-    verify_inclusion,
-    compute_leaf_hash,
-)
+try:
+    from util import extract_public_key, verify_artifact_signature
+    from merkle_proof import (
+        DEFAULT_HASHER,
+        verify_consistency,
+        verify_inclusion,
+        compute_leaf_hash,
+    )
+except:
+    from sscs_assignment.util import extract_public_key, verify_artifact_signature
+    from sscs_assignment.merkle_proof import (
+        DEFAULT_HASHER,
+        verify_consistency,
+        verify_inclusion,
+        compute_leaf_hash,
+    )
 
-REKOR_BASE_URL = os.environ.get("REKOR_BASE_URL", "https://rekor.sigstore.dev/api/v1")
+REKOR_BASE_URL = os.environ.get(
+    "REKOR_BASE_URL", "https://rekor.sigstore.dev/api/v1"
+)
 
 
 def get_log_entry(log_index, debug=False):
@@ -104,7 +115,9 @@ def inclusion(log_index, artifact_filepath, debug=False):
         debug (bool): Enable debug mode.
     """
 
-    signature, cert_data, entry = extract_signature_and_cert(get_log_entry(log_index))
+    signature, cert_data, entry = extract_signature_and_cert(
+        get_log_entry(log_index)
+    )
     public_key = extract_public_key(cert_data)
 
     try:
@@ -127,7 +140,12 @@ def inclusion(log_index, artifact_filepath, debug=False):
 
     try:
         verify_inclusion(
-            DEFAULT_HASHER, log_index, tree_size, leaf_hash, hashes, root_hash
+            DEFAULT_HASHER,
+            log_index,
+            tree_size,
+            leaf_hash,
+            hashes,
+            root_hash,
         )
         print("Offline root hash calculation for inclusion verified.")
 
@@ -218,7 +236,11 @@ def main():
     debug = False
     parser = argparse.ArgumentParser(description="Rekor Verifier")
     parser.add_argument(
-        "-d", "--debug", help="Debug mode", required=False, action="store_true"
+        "-d",
+        "--debug",
+        help="Debug mode",
+        required=False,
+        action="store_true",
     )  # Default false
     parser.add_argument(
         "-c",
@@ -250,13 +272,20 @@ def main():
         action="store_true",
     )
     parser.add_argument(
-        "--tree-id", help="Tree ID for consistency proof", required=False
+        "--tree-id",
+        help="Tree ID for consistency proof",
+        required=False,
     )
     parser.add_argument(
-        "--tree-size", help="Tree size for consistency proof", required=False, type=int
+        "--tree-size",
+        help="Tree size for consistency proof",
+        required=False,
+        type=int,
     )
     parser.add_argument(
-        "--root-hash", help="Root hash for consistency proof", required=False
+        "--root-hash",
+        help="Root hash for consistency proof",
+        required=False,
     )
     args = parser.parse_args()
     if args.debug:

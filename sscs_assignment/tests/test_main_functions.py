@@ -4,11 +4,12 @@ from unittest.mock import patch, MagicMock, mock_open
 import json
 import base64
 
-# Import the modules
-import main
-import merkle_proof
-import util
-
+try:
+    from sscs_assignment import main, merkle_proof, util
+    print("imported from sscs_assignment package")
+except ImportError:
+    import main, merkle_proof, util
+    print("imported from local fallback")
 
 class TestMainModule:
     """Test main.py functions"""
@@ -19,7 +20,10 @@ class TestMainModule:
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "test_uuid": {"body": "test_body", "verification": {"inclusionProof": {}}}
+            "test_uuid": {
+                "body": "test_body",
+                "verification": {"inclusionProof": {}},
+            }
         }
         mock_get.return_value = mock_response
 
@@ -46,7 +50,7 @@ class TestMainModule:
         mock_response.json.return_value = {
             "treeID": "11930509599166656506",
             "treeSize": 360993865,
-            "rootHash": "141a3c752daec75b527dd79101d859a33c38d94b4721e54328a9427a5a50c271",
+            "rootHash": "141a3c752daec75b527dd79101d859a33c38d94b4721e54328a9427a5a50c271",  # noqa: E501
             "signedTreeHead": "test_signed_tree_head",
             "inactiveShards": [],
         }
@@ -111,7 +115,12 @@ class TestMainModule:
     @patch("main.compute_leaf_hash")
     @patch("main.verify_inclusion")
     def test_inclusion_function(
-        self, mock_verify, mock_compute, mock_verify_sig, mock_extract, mock_get
+        self,
+        mock_verify,
+        mock_compute,
+        mock_verify_sig,
+        mock_extract,
+        mock_get,
     ):
         """Test inclusion proof function"""
         # Mock the API response
@@ -124,9 +133,13 @@ class TestMainModule:
                         {
                             "spec": {
                                 "signature": {
-                                    "content": base64.b64encode(b"sig").decode(),
+                                    "content": base64.b64encode(
+                                        b"sig"
+                                    ).decode(),
                                     "publicKey": {
-                                        "content": base64.b64encode(b"cert").decode()
+                                        "content": base64.b64encode(
+                                            b"cert"
+                                        ).decode()
                                     },
                                 }
                             }
@@ -292,7 +305,11 @@ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL==
             # If the mock cert is invalid, test that function exists
             assert hasattr(util, "extract_public_key")
 
-    @patch("builtins.open", new_callable=mock_open, read_data=b"test_artifact_data")
+    @patch(
+        "builtins.open",
+        new_callable=mock_open,
+        read_data=b"test_artifact_data",
+    )
     def test_verify_artifact_signature(self, mock_file):
         """Test artifact signature verification"""
         # This will fail signature verification but tests the function flow
@@ -301,7 +318,9 @@ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL==
 
         # Function should not crash, just print invalid signature
         try:
-            util.verify_artifact_signature(signature, public_key, "artifact.md")
+            util.verify_artifact_signature(
+                signature, public_key, "artifact.md"
+            )
         except Exception:
             # Function may raise exceptions for invalid inputs
             pass
@@ -327,7 +346,11 @@ class TestIntegration:
         }
         mock_get.return_value = mock_response
 
-        prev_checkpoint = {"treeID": "123", "treeSize": 100, "rootHash": "a" * 64}
+        prev_checkpoint = {
+            "treeID": "123",
+            "treeSize": 100,
+            "rootHash": "a" * 64,
+        }
 
         # This will fail verification but tests the flow
         main.consistency(prev_checkpoint, debug=False)

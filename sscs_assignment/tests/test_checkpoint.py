@@ -7,7 +7,10 @@ import os
 def test_checkpoint_returns_data():
     """Test that checkpoint command returns output"""
     result = subprocess.run(
-        ["python3", "main.py", "-c"], capture_output=True, text=True, cwd=os.getcwd()
+        ["python3", "main.py", "-c"],
+        capture_output=True,
+        text=True,
+        cwd=os.getcwd(),
     )
 
     # Should complete successfully
@@ -18,7 +21,10 @@ def test_checkpoint_returns_data():
 def test_checkpoint_has_tree_info():
     """Test that checkpoint output contains tree information"""
     result = subprocess.run(
-        ["python3", "main.py", "-c"], capture_output=True, text=True, cwd=os.getcwd()
+        ["python3", "main.py", "-c"],
+        capture_output=True,
+        text=True,
+        cwd=os.getcwd(),
     )
 
     output = result.stdout
@@ -29,7 +35,10 @@ def test_checkpoint_has_tree_info():
 def test_checkpoint_json_parseable():
     """Test that checkpoint returns valid JSON data"""
     result = subprocess.run(
-        ["python3", "main.py", "-c"], capture_output=True, text=True, cwd=os.getcwd()
+        ["python3", "main.py", "-c"],
+        capture_output=True,
+        text=True,
+        cwd=os.getcwd(),
     )
 
     # Try to parse as JSON
@@ -44,7 +53,10 @@ def test_checkpoint_json_parseable():
 def test_checkpoint_exit_code():
     """Test that checkpoint command exits successfully"""
     result = subprocess.run(
-        ["python3", "main.py", "-c"], capture_output=True, text=True, cwd=os.getcwd()
+        ["python3", "main.py", "-c"],
+        capture_output=True,
+        text=True,
+        cwd=os.getcwd(),
     )
 
     assert result.returncode == 0
@@ -53,7 +65,10 @@ def test_checkpoint_exit_code():
 def test_checkpoint_no_errors():
     """Test that checkpoint doesn't produce errors"""
     result = subprocess.run(
-        ["python3", "main.py", "-c"], capture_output=True, text=True, cwd=os.getcwd()
+        ["python3", "main.py", "-c"],
+        capture_output=True,
+        text=True,
+        cwd=os.getcwd(),
     )
 
     # Should not have error messages

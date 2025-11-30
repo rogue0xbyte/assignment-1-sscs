@@ -6,7 +6,14 @@ import os
 def test_inclusion_with_valid_params():
     """Test inclusion proof with valid log ID and artifact"""
     result = subprocess.run(
-        ["python3", "main.py", "--inclusion", "482833136", "--artifact", "artifact.md"],
+        [
+            "python3",
+            "main.py",
+            "--inclusion",
+            "482833136",
+            "--artifact",
+            "artifact.md",
+        ],
         capture_output=True,
         text=True,
         cwd=os.getcwd(),
@@ -19,7 +26,14 @@ def test_inclusion_with_valid_params():
 def test_inclusion_verification_output():
     """Test that inclusion proof produces verification output"""
     result = subprocess.run(
-        ["python3", "main.py", "--inclusion", "482833136", "--artifact", "artifact.md"],
+        [
+            "python3",
+            "main.py",
+            "--inclusion",
+            "482833136",
+            "--artifact",
+            "artifact.md",
+        ],
         capture_output=True,
         text=True,
         cwd=os.getcwd(),
@@ -27,20 +41,32 @@ def test_inclusion_verification_output():
 
     # Should mention verification
     output = result.stdout.lower()
-    assert "verified" in output or "signature" in output or "inclusion" in output
+    assert (
+        "verified" in output or "signature" in output or "inclusion" in output
+    )
 
 
 def test_inclusion_offline_verification():
     """Test that inclusion performs offline verification"""
     result = subprocess.run(
-        ["python3", "main.py", "--inclusion", "482833136", "--artifact", "artifact.md"],
+        [
+            "python3",
+            "main.py",
+            "--inclusion",
+            "482833136",
+            "--artifact",
+            "artifact.md",
+        ],
         capture_output=True,
         text=True,
         cwd=os.getcwd(),
     )
 
     # Should mention offline verification
-    assert "offline" in result.stdout.lower() or "root hash" in result.stdout.lower()
+    assert (
+        "offline" in result.stdout.lower()
+        or "root hash" in result.stdout.lower()
+    )
 
 
 def test_inclusion_requires_artifact():

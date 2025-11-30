@@ -4,10 +4,12 @@ from unittest.mock import patch, MagicMock
 import json
 import base64
 
-import main
-import merkle_proof
-import util
-
+try:
+    from sscs_assignment import main, merkle_proof, util
+    print("imported from sscs_assignment package")
+except ImportError:
+    import main, merkle_proof, util
+    print("imported from local fallback")
 
 class TestMainEdgeCases:
     """Test edge cases in main.py"""
@@ -54,7 +56,11 @@ class TestMainEdgeCases:
         """Test consistency with request exception"""
         mock_get.side_effect = Exception("Network error")
 
-        prev_checkpoint = {"treeID": "123", "treeSize": 100, "rootHash": "a" * 64}
+        prev_checkpoint = {
+            "treeID": "123",
+            "treeSize": 100,
+            "rootHash": "a" * 64,
+        }
 
         result = main.consistency(prev_checkpoint)
         assert not result
@@ -74,7 +80,11 @@ class TestMainEdgeCases:
         mock_get.return_value = mock_response
         mock_verify.side_effect = ValueError("Verification failed")
 
-        prev_checkpoint = {"treeID": "123", "treeSize": 100, "rootHash": "a" * 64}
+        prev_checkpoint = {
+            "treeID": "123",
+            "treeSize": 100,
+            "rootHash": "a" * 64,
+        }
 
         result = main.consistency(prev_checkpoint)
         assert not result
@@ -93,9 +103,13 @@ class TestMainEdgeCases:
                         {
                             "spec": {
                                 "signature": {
-                                    "content": base64.b64encode(b"sig").decode(),
+                                    "content": base64.b64encode(
+                                        b"sig"
+                                    ).decode(),
                                     "publicKey": {
-                                        "content": base64.b64encode(b"cert").decode()
+                                        "content": base64.b64encode(
+                                            b"cert"
+                                        ).decode()
                                     },
                                 }
                             }
@@ -123,7 +137,11 @@ class TestMainEdgeCases:
     @patch("main.verify_artifact_signature")
     @patch("main.verify_inclusion")
     def test_inclusion_verification_error(
-        self, mock_verify_inc, mock_verify_sig, mock_extract, mock_get_entry
+        self,
+        mock_verify_inc,
+        mock_verify_sig,
+        mock_extract,
+        mock_get_entry,
     ):
         """Test inclusion with verification error"""
         mock_get_entry.return_value = {
@@ -133,9 +151,13 @@ class TestMainEdgeCases:
                         {
                             "spec": {
                                 "signature": {
-                                    "content": base64.b64encode(b"sig").decode(),
+                                    "content": base64.b64encode(
+                                        b"sig"
+                                    ).decode(),
                                     "publicKey": {
-                                        "content": base64.b64encode(b"cert").decode()
+                                        "content": base64.b64encode(
+                                            b"cert"
+                                        ).decode()
                                     },
                                 }
                             }
@@ -153,7 +175,9 @@ class TestMainEdgeCases:
             }
         }
         mock_extract.return_value = b"key"
-        mock_verify_inc.side_effect = ValueError("Inclusion verification failed")
+        mock_verify_inc.side_effect = ValueError(
+            "Inclusion verification failed"
+        )
 
         result = main.inclusion(123, "artifact.md")
         assert not result
@@ -167,7 +191,9 @@ class TestMerkleProofEdgeCases:
         hasher = merkle_proof.DEFAULT_HASHER
 
         with pytest.raises(ValueError, match="size2.*< size1"):
-            merkle_proof.verify_consistency(hasher, 100, 50, [], "a" * 64, "b" * 64)
+            merkle_proof.verify_consistency(
+                hasher, 100, 50, [], "a" * 64, "b" * 64
+            )
 
     def test_verify_consistency_equal_sizes_with_proof(self):
         """Test consistency with equal sizes but non-empty proof"""
@@ -175,7 +201,9 @@ class TestMerkleProofEdgeCases:
         root = "a" * 64
 
         with pytest.raises(ValueError, match="not empty"):
-            merkle_proof.verify_consistency(hasher, 100, 100, ["hash"], root, root)
+            merkle_proof.verify_consistency(
+                hasher, 100, 100, ["hash"], root, root
+            )
 
     def test_verify_consistency_size1_zero_with_proof(self):
         """Test consistency with size1=0 but non-empty proof"""
@@ -191,28 +219,36 @@ class TestMerkleProofEdgeCases:
         hasher = merkle_proof.DEFAULT_HASHER
 
         with pytest.raises(ValueError, match="empty.*proof"):
-            merkle_proof.verify_consistency(hasher, 50, 100, [], "a" * 64, "b" * 64)
+            merkle_proof.verify_consistency(
+                hasher, 50, 100, [], "a" * 64, "b" * 64
+            )
 
     def test_root_from_inclusion_proof_index_beyond_size(self):
         """Test inclusion proof with index >= size"""
         hasher = merkle_proof.DEFAULT_HASHER
 
         with pytest.raises(ValueError, match="index is beyond size"):
-            merkle_proof.root_from_inclusion_proof(hasher, 100, 50, b"0" * 32, [])
+            merkle_proof.root_from_inclusion_proof(
+                hasher, 100, 50, b"0" * 32, []
+            )
 
     def test_root_from_inclusion_proof_wrong_leaf_size(self):
         """Test inclusion proof with wrong leaf hash size"""
         hasher = merkle_proof.DEFAULT_HASHER
 
         with pytest.raises(ValueError, match="unexpected size"):
-            merkle_proof.root_from_inclusion_proof(hasher, 5, 10, b"wrong_size", [])
+            merkle_proof.root_from_inclusion_proof(
+                hasher, 5, 10, b"wrong_size", []
+            )
 
     def test_root_from_inclusion_proof_wrong_proof_size(self):
         """Test inclusion proof with wrong proof size"""
         hasher = merkle_proof.DEFAULT_HASHER
 
         with pytest.raises(ValueError, match="wrong proof size"):
-            merkle_proof.root_from_inclusion_proof(hasher, 5, 10, b"0" * 32, [])
+            merkle_proof.root_from_inclusion_proof(
+                hasher, 5, 10, b"0" * 32, []
+            )
 
     def test_verify_inclusion_with_debug(self):
         """Test verify_inclusion with debug mode"""
@@ -223,7 +259,9 @@ class TestMerkleProofEdgeCases:
 
         # This will fail verification but tests debug path
         with pytest.raises(merkle_proof.RootMismatchError):
-            merkle_proof.verify_inclusion(hasher, 0, 1, leaf_hash, [], root, debug=True)
+            merkle_proof.verify_inclusion(
+                hasher, 0, 1, leaf_hash, [], root, debug=True
+            )
 
     def test_compute_leaf_hash_various_inputs(self):
         """Test compute_leaf_hash with various inputs"""
@@ -244,7 +282,9 @@ class TestMerkleProofEdgeCases:
 
     def test_root_mismatch_error_str(self):
         """Test RootMismatchError string representation"""
-        error = merkle_proof.RootMismatchError(b"expected_root", b"calculated_root")
+        error = merkle_proof.RootMismatchError(
+            b"expected_root", b"calculated_root"
+        )
         error_str = str(error)
         assert "calculated root" in error_str
         assert "expected root" in error_str
