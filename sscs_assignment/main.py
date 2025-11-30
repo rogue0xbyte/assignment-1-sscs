@@ -23,7 +23,10 @@ try:
         compute_leaf_hash,
     )
 except ModuleNotFoundError:
-    from sscs_assignment.util import extract_public_key, verify_artifact_signature
+    from sscs_assignment.util import (
+        extract_public_key,
+        verify_artifact_signature,
+    )  # noqa: E501
     from sscs_assignment.merkle_proof import (
         DEFAULT_HASHER,
         verify_consistency,

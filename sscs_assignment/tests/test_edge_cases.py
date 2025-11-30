@@ -6,12 +6,15 @@ import base64
 
 try:
     from sscs_assignment import main, merkle_proof, util
+
     print("imported from sscs_assignment package")
 except ImportError:
     import main
     import merkle_proof
     import util
+
     print("imported from local fallback")
+
 
 class TestMainEdgeCases:
     """Test edge cases in main.py"""

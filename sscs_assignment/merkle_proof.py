@@ -236,7 +236,9 @@ def root_from_inclusion_proof(hasher, index, size, leaf_hash, proof):
     return res
 
 
-def verify_inclusion(hasher, index, size, leaf_hash, proof, root, debug=False):
+def verify_inclusion(
+    hasher, index, size, leaf_hash, proof, root, debug=False
+):
     """
     Verify inclusion proof for a leaf in a Merkle tree.
 
