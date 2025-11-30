@@ -42,14 +42,14 @@ jobs:
 
       - name: Run ruff format check
         run: |
-          ruff format --check . || true
+          ruff format --check .
 
       # -------------------------
       # Lint Checks
       # -------------------------
       - name: Run ruff lint
         run: |
-          ruff check . || true
+          ruff check .
 
       - name: Run flake8
         run: |
@@ -57,25 +57,25 @@ jobs:
 
       - name: Run pylint
         run: |
-          pylint sscs_assignment || true
+          pylint sscs_assignment
 
       # -------------------------
       # SAST Scanning (Bandit)
       # -------------------------
       - name: Run Bandit security scan
         run: |
-          bandit -r . -ll || true
+          bandit -r . -ll
 
       # -------------------------
       # Secret Scanning (TruffleHog)
       # -------------------------
       - name: Run TruffleHog
         run: |
-          trufflehog filesystem --path . || true
+          trufflehog filesystem --path .
 
       # -------------------------
       # Testing & Coverage
       # -------------------------
       - name: Run tests with coverage
         run: |
-          pytest --cov=. || true
+          pytest --cov=.
