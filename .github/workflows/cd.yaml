@@ -53,25 +53,17 @@ jobs:
 
       - name: Restore cosign key
         run: |
-          echo "${{ secrets.COSIGN_KEY }}" | base64 -d > cosign.key
+          echo "${{ secrets.COSIGN_KEY }}" > cosign.key
 
       - name: Generate SBOM attestation
         run: |
-          cat > cosign.key <<'EOF'
-          ${{ secrets.COSIGN_KEY }}
-          EOF
-          chmod 600 cosign.key
-          
-          WHEEL_FILE=$(ls dist/*.whl)
-          
-          # Create attestation (outputs to file automatically with --output-file or redirect)
           cosign attest-blob \
             --key cosign.key \
             --type cyclonedx \
+            --output-attestation dist/sbom-attestation.json \
+            --bundle dist/sbom-attestation.bundle \
             --predicate cyclonedx-sbom.json \
-            ${WHEEL_FILE}
-
-          rm -f cosign.key
+            dist/*.whl > sbom-attestation.json
 
       - name: Upload SBOM attestation bundle
         uses: actions/upload-artifact@v4
