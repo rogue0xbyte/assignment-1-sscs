@@ -2,8 +2,8 @@ name: CD Pipeline
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
+    tags:
+      - '*'
 
 jobs:
   build-and-attest:
