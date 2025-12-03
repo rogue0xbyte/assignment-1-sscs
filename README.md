@@ -1,5 +1,10 @@
 # software-supply-chain-security
 
+[![CD Pipeline](https://github.com/rogue0xbyte/assignment-1-sscs/actions/workflows/cd.yaml/badge.svg)](https://github.com/rogue0xbyte/assignment-1-sscs/actions/workflows/cd.yaml)
+[![CI Pipeline](https://github.com/rogue0xbyte/assignment-1-sscs/actions/workflows/ci.yaml/badge.svg)](https://github.com/rogue0xbyte/assignment-1-sscs/actions/workflows/ci.yaml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/rogue0xbyte/assignment-1-sscs/badge)](https://scorecard.dev/viewer/?uri=github.com/rogue0xbyte/assignment-1-sscs)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11542/badge)](https://www.bestpractices.dev/projects/11542)
+
 this repository demonstrates software supply chain security practices using [sigstore](https://www.sigstore.dev/) for artifact signing and verification.  
 it includes steps to **create, sign, and verify software artifacts**, along with verifying their inclusion in a **merkle tree transparency log**.
 
@@ -126,5 +131,6 @@ assignment for **software supply chain security**
 ---
 
 ## [to-do]
+
 
 [] review test-cases written with ai-assistance
