@@ -58,7 +58,7 @@ jobs:
       - name: Generate SBOM attestation
         run: |
 
-          cosign attest-blob --key cosign.key --type cyclonedx --predicate cyclonedx-sbom.json dist/sscs_assignment-0.1.0
+          cosign attest-blob --key cosign.key --type cyclonedx --predicate cyclonedx-sbom.json --bundle dist/sscs_assignment-0.1.0
 
       - name: Upload SBOM attestation bundle
         uses: actions/upload-artifact@v4
