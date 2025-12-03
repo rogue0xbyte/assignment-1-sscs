@@ -1,0 +1,5 @@
+Part 1: Successful Workflow Run: https://github.com/rogue0xbyte/assignment-1-sscs/actions/runs/19805466338
+
+Part 2:
+CI: https://github.com/rogue0xbyte/assignment-1-sscs/actions/runs/19879777034
+CD: https://github.com/rogue0xbyte/assignment-1-sscs/actions/runs/19879777040
